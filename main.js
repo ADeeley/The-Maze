@@ -7,11 +7,25 @@ var colours = {
     ORANGE     : "#FFB300"
 }
 
-function Node(x, y, h, w) {
+function shuffle(a) {
+    /**
+     * Shuffles an array in place.
+     */
+    var tmp, j;
+    for (var i = a.length; i > 0; i--) {
+        j = Math.floor(Math.random() * i);
+        tmp = a[i - 1];
+        a[i - 1] = a[j];
+        a[j] = tmp;
+    }
+}
+function Node(x, y, h, w, r, c) {
     this.x      = x;
     this.y      = y;
     this.h      = h;
     this.w      = w;
+    this.row    = r;
+    this.col    = c;
     this.isOpen = false;
     this.colour = colours.GREEN;
 
@@ -27,7 +41,7 @@ function Node(x, y, h, w) {
         /**
          * Opens the node up to be travelled to.
          */
-        this.colour = colours.GREY;
+        this.colour = colours.GREEN;
         this.isOpen = true;
     }
 }
@@ -43,10 +57,9 @@ function Nodes(n) {
     for (var i = 0; i < this.gridSz; i++) {
         var row = [];
         for (var j = 0; j < this.gridSz; j++) {
-            row.push(new Node(this.x, this.y, this.nodeSz, this.nodeSz));
+            row.push(new Node(this.x, this.y, this.nodeSz, this.nodeSz, i, j));
             this.x += this.nodeSz + 2;
         }
-        console.log(row);
         this.grid.push(row);
         this.x = 2;
         this.y += this.nodeSz + 2;
@@ -119,6 +132,26 @@ function Nodes(n) {
     }
 }
 
+function generator(row, col) {
+    /**
+     * Generates a maze by randomly joining this node with one of it's 
+     * neighbours. This function is then recursively called on the 
+     * joined node.
+     * @row, col : integers representing the node's location in the grid
+     */
+    var thisNode   = nodes.getNode(row, col);
+    var neighbours = nodes.getNeighbours(row, col);
+
+    console.log("Got here");
+    shuffle(neighbours);
+    for (var i = 0; i < neighbours.length; i++) {
+        if (!(neighbours[i].isOpen)) {
+            console.log("Got past isOpen test");
+            nodes.joinNodes(thisNode, neighbours[i]);
+            generator(neighbours[i].row, neighbours[i].col);
+        }
+    }
+}
 var nodes = new Nodes(23);
 
 function joinTest() {
@@ -129,16 +162,34 @@ function joinTest() {
     joinNodes(a, b);
 }
 function getNeighboursTest() {
-    var n = nodes.getNeighbours(22,22);
+    var row = 0;
+    var col = 0;
+    var n = nodes.getNeighbours(row, col);
     for (var i = 0; i < n.length; i++) {
-        console.log(n[i].x + " " + n[i].y);
+        console.log("node " + row +" " + col + " " + n[i].x + " " + n[i].y);
     }
 
 }
 
+function shuffleTest() {
+    a = [0,1,2,3,4,5];
+    shuffle(a);
+    console.log(a);
+    a = []
+    shuffle(a);
+    console.log(a);
+}
+
 getNeighboursTest();
+
+
 draw = function() {
+    /**
+     * Main draw loop
+     */
     nodes.drawAll();
+    generator(0, 0);
+
 }
 setInterval(draw, 10);
 
