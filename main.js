@@ -3,7 +3,7 @@ var ctx    = canvas.getContext("2d");
 
 var colours = {
     GREEN      : "#689F38",
-    GREY : "#37474F",
+    GREY       : "#37474F",
     ORANGE     : "#FFB300"
 }
 
@@ -65,12 +65,38 @@ function Nodes(n) {
         this.y += this.nodeSz + 2;
     }
 
+    this.drawStartAndEndNodes = function() {
+        // Start node
+        ctx.beginPath();
+        ctx.arc(2,2, this.nodeSz, 0, 2*Math.PI);
+        ctx.fillStyle = "#ffffff";
+        ctx.fill();
+        ctx.closePath();
+
+        ctx.font = "12pt serif"
+        ctx.fillStyle = "#000000";
+        ctx.fillText("S", 3, 12);
+
+        // End node
+        ctx.beginPath();
+        ctx.arc(canvas.width -2, canvas.height - 2, this.nodeSz, 0, 2*Math.PI);
+        ctx.fillStyle = "#ffffff";
+        ctx.fill();
+        ctx.closePath();
+
+        ctx.font = "12pt serif"
+        ctx.fillStyle = "#000000";
+        ctx.fillText("F", canvas.width - 12, canvas.height -3);
+    }
+    
+
     this.drawAll = function() {
         for (var i = 0; i < this.gridSz; i++) {
             for (var j = 0; j < this.gridSz; j++) {
                 this.grid[i][j].draw();
             }
         }
+        this.drawStartAndEndNodes();
     }
 
     this.getNode = function(row, col) {
@@ -142,11 +168,9 @@ function generator(row, col) {
     var thisNode   = nodes.getNode(row, col);
     var neighbours = nodes.getNeighbours(row, col);
 
-    console.log("Got here");
     shuffle(neighbours);
     for (var i = 0; i < neighbours.length; i++) {
         if (!(neighbours[i].isOpen)) {
-            console.log("Got past isOpen test");
             nodes.joinNodes(thisNode, neighbours[i]);
             generator(neighbours[i].row, neighbours[i].col);
         }
@@ -161,6 +185,7 @@ function joinTest() {
     b.openUp();
     joinNodes(a, b);
 }
+
 function getNeighboursTest() {
     var row = 0;
     var col = 0;
@@ -180,15 +205,13 @@ function shuffleTest() {
     console.log(a);
 }
 
-getNeighboursTest();
-
 
 draw = function() {
     /**
      * Main draw loop
      */
-    nodes.drawAll();
     generator(0, 0);
+    nodes.drawAll();
 
 }
 setInterval(draw, 10);
