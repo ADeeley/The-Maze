@@ -117,28 +117,65 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   }
 
   return newRequire;
-})({"main.ts":[function(require,module,exports) {
-var canvas = document.getElementById("myCanvas");
-var ctx = canvas.getContext("2d");
-var colours = {
-  GREEN: "#689F38",
-  GREY: "#37474F",
-  ORANGE: "#FFB300"
+})({"utils/utils.ts":[function(require,module,exports) {
+"use strict";
+
+var __spreadArrays = this && this.__spreadArrays || function () {
+  for (var s = 0, i = 0, il = arguments.length; i < il; i++) {
+    s += arguments[i].length;
+  }
+
+  for (var r = Array(s), k = 0, i = 0; i < il; i++) {
+    for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++) {
+      r[k] = a[j];
+    }
+  }
+
+  return r;
 };
 
-function shuffle(a) {
-  /**
-   * Shuffles an array in place.
-   */
-  var tmp, j;
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
 
-  for (var i = a.length; i > 0; i--) {
-    j = Math.floor(Math.random() * i);
-    tmp = a[i - 1];
-    a[i - 1] = a[j];
-    a[j] = tmp;
-  }
-}
+var Utils =
+/** @class */
+function () {
+  function Utils() {}
+
+  Utils.shuffle = function (originalArray) {
+    var subjectArray = __spreadArrays(originalArray);
+
+    for (var index = subjectArray.length; index > 0; index--) {
+      var randIndex = Math.floor(Math.random() * index);
+      var tmpVal = subjectArray[index - 1];
+      subjectArray[index - 1] = subjectArray[randIndex];
+      subjectArray[randIndex] = tmpVal;
+    }
+
+    return subjectArray;
+  };
+
+  return Utils;
+}();
+
+exports.Utils = Utils;
+},{}],"main.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var utils_1 = require("./utils/utils");
+
+var canvas = document.getElementById("mazeCanvas");
+var ctx = canvas.getContext("2d");
+var colours;
+
+(function (colours) {
+  colours["grey"] = "#37474F";
+})(colours || (colours = {}));
 
 function Node(x, y, h, w, r, c) {
   this.x = x;
@@ -148,7 +185,7 @@ function Node(x, y, h, w, r, c) {
   this.row = r;
   this.col = c;
   this.isOpen = false;
-  this.colour = colours.GREEN;
+  this.colour = colours.grey;
 
   this.draw = function () {
     ctx.beginPath();
@@ -162,7 +199,7 @@ function Node(x, y, h, w, r, c) {
     /**
      * Opens the node up to be travelled to.
      */
-    this.colour = colours.GREEN;
+    this.colour = colours.grey;
     this.isOpen = true;
   };
 }
@@ -286,7 +323,7 @@ function generator(row, col) {
    */
   var thisNode = nodes.getNode(row, col);
   var neighbours = nodes.getNeighbours(row, col);
-  shuffle(neighbours);
+  neighbours = utils_1.Utils.shuffle(neighbours);
 
   for (var i = 0; i < neighbours.length; i++) {
     if (!neighbours[i].isOpen) {
@@ -316,16 +353,7 @@ function getNeighboursTest() {
   }
 }
 
-function shuffleTest() {
-  a = [0, 1, 2, 3, 4, 5];
-  shuffle(a);
-  console.log(a);
-  a = [];
-  shuffle(a);
-  console.log(a);
-}
-
-draw = function draw() {
+var draw = function draw() {
   /**
    * Main draw loop
    */
@@ -334,7 +362,7 @@ draw = function draw() {
 };
 
 setInterval(draw, 10);
-},{}],"../../../../.nvm/versions/node/v11.6.0/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"./utils/utils":"utils/utils.ts"}],"../../../../.nvm/versions/node/v11.6.0/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -362,7 +390,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "64789" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "58270" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
