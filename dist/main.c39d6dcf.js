@@ -160,92 +160,127 @@ function () {
 }();
 
 exports.Utils = Utils;
-},{}],"main.ts":[function(require,module,exports) {
+},{}],"enums/colours.enum.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var ColoursEnum;
+
+(function (ColoursEnum) {
+  ColoursEnum["grey"] = "#37474F";
+})(ColoursEnum = exports.ColoursEnum || (exports.ColoursEnum = {}));
+},{}],"models/node.model.ts":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var utils_1 = require("./utils/utils");
+var colours_enum_1 = require("../enums/colours.enum");
 
-var canvas = document.getElementById("mazeCanvas");
-var ctx = canvas.getContext("2d");
-var colours;
+var Node =
+/** @class */
+function () {
+  function Node(ctx, x, y, h, w, row, col, isOpen, colour) {
+    if (isOpen === void 0) {
+      isOpen = false;
+    }
 
-(function (colours) {
-  colours["grey"] = "#37474F";
-})(colours || (colours = {}));
+    if (colour === void 0) {
+      colour = colours_enum_1.ColoursEnum.grey;
+    }
 
-function Node(x, y, h, w, r, c) {
-  this.x = x;
-  this.y = y;
-  this.h = h;
-  this.w = w;
-  this.row = r;
-  this.col = c;
-  this.isOpen = false;
-  this.colour = colours.grey;
+    this.ctx = ctx;
+    this.x = x;
+    this.y = y;
+    this.h = h;
+    this.w = w;
+    this.row = row;
+    this.col = col;
+    this.isOpen = isOpen;
+    this.colour = colour;
+  }
 
-  this.draw = function () {
-    ctx.beginPath();
-    ctx.rect(this.x, this.y, this.w, this.h);
-    ctx.fillStyle = this.colour;
-    ctx.fill();
-    ctx.closePath();
+  Node.prototype.draw = function () {
+    this.ctx.beginPath();
+    this.ctx.rect(this.x, this.y, this.w, this.h);
+    this.ctx.fillStyle = this.colour;
+    this.ctx.fill();
+    this.ctx.closePath();
   };
 
-  this.openUp = function () {
+  Node.prototype.openUp = function () {
     /**
      * Opens the node up to be travelled to.
      */
-    this.colour = colours.grey;
+    //this.colour = colours.grey;
     this.isOpen = true;
   };
-}
 
-function Nodes(n) {
-  this.x = 2;
-  this.y = 2;
-  this.gridSz = n;
-  this.nodeSz = 20;
-  this.grid = []; //Initialise the 2d nodes array
+  return Node;
+}();
 
-  for (var i = 0; i < this.gridSz; i++) {
-    var row = [];
+exports.Node = Node;
+},{"../enums/colours.enum":"enums/colours.enum.ts"}],"models/nodes.model.ts":[function(require,module,exports) {
+"use strict";
 
-    for (var j = 0; j < this.gridSz; j++) {
-      row.push(new Node(this.x, this.y, this.nodeSz, this.nodeSz, i, j));
-      this.x += this.nodeSz + 2;
-    }
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
 
-    this.grid.push(row);
+var node_model_1 = require("./node.model");
+
+var Nodes =
+/** @class */
+function () {
+  function Nodes(ctx, canvas, n) {
+    this.ctx = ctx;
+    this.canvas = canvas;
+    this.n = n;
     this.x = 2;
-    this.y += this.nodeSz + 2;
+    this.y = 2;
+    this.nodeSz = 20;
+    this.grid = [];
+    this.gridSz = n; //Initialise the 2d nodes array
+
+    for (var i = 0; i < this.gridSz; i++) {
+      var row = [];
+
+      for (var j = 0; j < this.gridSz; j++) {
+        row.push(new node_model_1.Node(ctx, this.x, this.y, this.nodeSz, this.nodeSz, i, j));
+        this.x += this.nodeSz + 2;
+      }
+
+      this.grid.push(row);
+      this.x = 2;
+      this.y += this.nodeSz + 2;
+    }
   }
 
-  this.drawStartAndEndNodes = function () {
+  Nodes.prototype.drawStartAndEndNodes = function () {
     // Start node
-    ctx.beginPath();
-    ctx.arc(2, 2, this.nodeSz, 0, 2 * Math.PI);
-    ctx.fillStyle = "#ffffff";
-    ctx.fill();
-    ctx.closePath();
-    ctx.font = "12pt serif";
-    ctx.fillStyle = "#000000";
-    ctx.fillText("S", 3, 12); // End node
+    this.ctx.beginPath();
+    this.ctx.arc(2, 2, this.nodeSz, 0, 2 * Math.PI);
+    this.ctx.fillStyle = "#ffffff";
+    this.ctx.fill();
+    this.ctx.closePath();
+    this.ctx.font = "12pt serif";
+    this.ctx.fillStyle = "#000000";
+    this.ctx.fillText("S", 3, 12); // End node
 
-    ctx.beginPath();
-    ctx.arc(canvas.width - 2, canvas.height - 2, this.nodeSz, 0, 2 * Math.PI);
-    ctx.fillStyle = "#ffffff";
-    ctx.fill();
-    ctx.closePath();
-    ctx.font = "12pt serif";
-    ctx.fillStyle = "#000000";
-    ctx.fillText("F", canvas.width - 12, canvas.height - 3);
+    this.ctx.beginPath();
+    this.ctx.arc(this.canvas.width - 2, this.canvas.height - 2, this.nodeSz, 0, 2 * Math.PI);
+    this.ctx.fillStyle = "#ffffff";
+    this.ctx.fill();
+    this.ctx.closePath();
+    this.ctx.font = "12pt serif";
+    this.ctx.fillStyle = "#000000";
+    this.ctx.fillText("F", this.canvas.width - 12, this.canvas.height - 3);
   };
 
-  this.drawAll = function () {
+  Nodes.prototype.drawAll = function () {
     for (var i = 0; i < this.gridSz; i++) {
       for (var j = 0; j < this.gridSz; j++) {
         this.grid[i][j].draw();
@@ -255,7 +290,7 @@ function Nodes(n) {
     this.drawStartAndEndNodes();
   };
 
-  this.getNode = function (row, col) {
+  Nodes.prototype.getNode = function (row, col) {
     /**
      * returns the node at row, col
      * @row, col : ints
@@ -263,7 +298,7 @@ function Nodes(n) {
     return this.grid[row][col];
   };
 
-  this.joinNodes = function (nodeA, nodeB) {
+  Nodes.prototype.joinNodes = function (nodeA, nodeB) {
     /**
      * Joins the nodes a and b together visually by merging the two boxes
      * a and b on the canvas.
@@ -284,11 +319,7 @@ function Nodes(n) {
     nodeB.openUp();
   };
 
-  this.getNeighbours = function (row, col) {
-    /**
-     * returns an array of nodes which are the node at row, col's neighbours.
-     * @row, col - indicies for the location of the node in grid.
-     */
+  Nodes.prototype.getNeighbours = function (row, col) {
     var neighbours = []; //left of node
 
     if (row > 0) {
@@ -312,46 +343,44 @@ function Nodes(n) {
 
     return neighbours;
   };
-}
+
+  return Nodes;
+}();
+
+exports.Nodes = Nodes;
+},{"./node.model":"models/node.model.ts"}],"main.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var utils_1 = require("./utils/utils");
+
+var nodes_model_1 = require("./models/nodes.model");
+
+var canvas = document.getElementById("mazeCanvas");
+var ctx = canvas.getContext("2d");
 
 function generator(row, col) {
   /**
    * Generates a maze by randomly joining this node with one of it's
    * neighbours. This function is then recursively called on the
    * joined node.
-   * @row, col : integers representing the node's location in the grid
    */
   var thisNode = nodes.getNode(row, col);
   var neighbours = nodes.getNeighbours(row, col);
-  neighbours = utils_1.Utils.shuffle(neighbours);
+  var shuffledNeighbours = utils_1.Utils.shuffle(neighbours);
 
-  for (var i = 0; i < neighbours.length; i++) {
-    if (!neighbours[i].isOpen) {
-      nodes.joinNodes(thisNode, neighbours[i]);
-      generator(neighbours[i].row, neighbours[i].col);
+  for (var i = 0; i < shuffledNeighbours.length; i++) {
+    if (!shuffledNeighbours[i].isOpen) {
+      nodes.joinNodes(thisNode, shuffledNeighbours[i]);
+      generator(shuffledNeighbours[i].row, shuffledNeighbours[i].col);
     }
   }
 }
 
-var nodes = new Nodes(23);
-
-function joinTest() {
-  var a = nodes.getNode(2, 2);
-  var b = nodes.getNode(2, 1);
-  a.openUp();
-  b.openUp();
-  joinNodes(a, b);
-}
-
-function getNeighboursTest() {
-  var row = 0;
-  var col = 0;
-  var n = nodes.getNeighbours(row, col);
-
-  for (var i = 0; i < n.length; i++) {
-    console.log("node " + row + " " + col + " " + n[i].x + " " + n[i].y);
-  }
-}
+var nodes = new nodes_model_1.Nodes(ctx, canvas, 23);
 
 var draw = function draw() {
   /**
@@ -362,7 +391,7 @@ var draw = function draw() {
 };
 
 setInterval(draw, 10);
-},{"./utils/utils":"utils/utils.ts"}],"../../../../.nvm/versions/node/v11.6.0/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"./utils/utils":"utils/utils.ts","./models/nodes.model":"models/nodes.model.ts"}],"../../../../.nvm/versions/node/v11.6.0/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
