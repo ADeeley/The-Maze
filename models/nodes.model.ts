@@ -37,30 +37,29 @@ export class Nodes {
 		return row;
 	}
 
-	public drawStartAndEndNodes(): void {
-		// Start node
-		this.ctx.beginPath();
-		this.ctx.arc(2, 2, this.nodeSize, 0, 2 * Math.PI);
-		this.ctx.fillStyle = ColoursEnum.white;
-		this.ctx.fill();
-		this.ctx.closePath();
-
-		this.ctx.font = "12pt serif"
-		this.ctx.fillStyle = ColoursEnum.black;
-		this.ctx.fillText("S", 3, 12);
-
-		// End node
+	private drawArc(x: number, y: number): void {
 		this.ctx.beginPath();
 		this.ctx.arc(
-			this.canvas.width - this.borderSize,
-			this.canvas.height - this.borderSize,
-			this.nodeSize, 0,
+			x,
+			y,
+			this.nodeSize,
+			0,
 			2 * Math.PI
 		);
 		this.ctx.fillStyle = ColoursEnum.white;
 		this.ctx.fill();
 		this.ctx.closePath();
+	}
 
+	public drawStartAndEndNodes(): void {
+		// Start node
+		this.drawArc(this.borderSize, this.borderSize);
+		this.ctx.font = "12pt serif"
+		this.ctx.fillStyle = ColoursEnum.black;
+		this.ctx.fillText("S", 3, 12);
+
+		// End node
+		this.drawArc(this.canvas.width - this.borderSize, this.canvas.height - this.borderSize);
 		this.ctx.font = "12pt serif"
 		this.ctx.fillStyle = ColoursEnum.black;
 		this.ctx.fillText("F", this.canvas.width - 12, this.canvas.height - 3);
@@ -68,11 +67,9 @@ export class Nodes {
 
 
 	public drawAll(): void {
-		for (let i = 0; i < this.gridSize; i++) {
-			for (let j = 0; j < this.gridSize; j++) {
-				this.grid[i][j].draw();
-			}
-		}
+		this.grid.forEach((row: Array<Node>) => {
+			row.forEach((node: Node) => node.draw());
+		});
 		this.drawStartAndEndNodes();
 	}
 
@@ -80,7 +77,7 @@ export class Nodes {
 		return this.grid[row][col];
 	}
 
-	public joinNodes(nodeA, nodeB): void {
+	public joinNodes(nodeA: Node, nodeB: Node): void {
 		/**
 		 * Joins the nodes a and b together visually by merging the two boxes
 		 * a and b on the canvas.
@@ -104,7 +101,7 @@ export class Nodes {
 	}
 
 	public getNeighbours(row: number, col: number): Array<Node> {
-		const neighbours = [];
+		const neighbours: Array<Node> = [];
 
 		//left of node
 		if (row > 0) {
