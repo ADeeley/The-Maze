@@ -8,7 +8,7 @@ export class Node {
 	public w: number;
 
 	constructor(
-		private ctx,
+		public ctx,
 		private rectModel: RectModel,
 		public row: number,
 		public col: number,
@@ -18,7 +18,7 @@ export class Node {
 		this.x = this.rectModel.x;
 		this.y = this.rectModel.y;
 		this.h = this.rectModel.height;
-		this.y = this.rectModel.width;
+		this.w = this.rectModel.width;
 	}
 
 	public draw() {
