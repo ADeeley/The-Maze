@@ -1,4 +1,5 @@
 import { Node } from "./node.model";
+import { RectModel } from "./rect.model";
 
 export class Nodes {
 	private x = 2;
@@ -14,7 +15,8 @@ export class Nodes {
 		for (var i = 0; i < this.gridSz; i++) {
 			var row = [];
 			for (var j = 0; j < this.gridSz; j++) {
-				row.push(new Node(ctx, this.x, this.y, this.nodeSz, this.nodeSz, i, j));
+				const rectModel = new RectModel(this.x, this.y, this.nodeSz, this.nodeSz);
+				row.push(new Node(ctx, rectModel, i, j));
 				this.x += this.nodeSz + 2;
 			}
 			this.grid.push(row);

@@ -1,17 +1,24 @@
 import { ColoursEnum } from "../enums/colours.enum";
+import { RectModel } from "./rect.model";
 
 export class Node {
+	public x: number;
+	public y: number;
+	public h: number;
+	public w: number;
+
 	constructor(
 		private ctx,
-		public x: number,
-		public y: number,
-		public h: number,
-		public w: number,
+		private rectModel: RectModel,
 		public row: number,
 		public col: number,
 		public isOpen: boolean = false,
 		public colour: ColoursEnum = ColoursEnum.grey
 	) {
+		this.x = this.rectModel.x;
+		this.y = this.rectModel.y;
+		this.h = this.rectModel.height;
+		this.y = this.rectModel.width;
 	}
 
 	public draw() {
