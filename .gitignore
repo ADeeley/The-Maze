@@ -1,3 +1,6 @@
 *.swp
 *~
 *.js.swo
+.cache/
+dist/
+node_modules/
