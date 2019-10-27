@@ -3,34 +3,36 @@ import { RectModel } from "./rect.model";
 import { ColoursEnum } from "../enums/colours.enum";
 
 export class Nodes {
-	private gridSz: number;
-	private nodeSz = 20;
-	private grid = [];
+	private gridSize: number;
+	private nodeSize = 20;
+	private grid: Array<Array<Node>> = [];
 	private borderSize = 2;
 
 	constructor(private ctx, private canvas, public n: number) {
-		this.gridSz = n;
+		this.gridSize = n;
 		this.initNodeGrid();
 	}
 
-	private initNodeGrid() {
-		let x = this.borderSize;
+	private initNodeGrid(): void {
 		let y = this.borderSize;
+		const borderedNodeWidth = this.nodeSize + this.borderSize;
 
-		for (let i = 0; i < this.gridSz; i++) {
-			const row = this.fillRow(x, y, i);
+		for (let rowNumber = 0; rowNumber < this.gridSize; rowNumber++) {
+			const row = this.fillRow(y, rowNumber);
 			this.grid.push(row);
-			x = this.borderSize;
-			y += (this.nodeSz + this.borderSize);
+			y += borderedNodeWidth;
 		}
 	}
 
-	private fillRow(x, y, i): Array<Node> {
-		const row = [];
-		for (let j = 0; j < this.gridSz; j++) {
-			const rectModel = new RectModel(x, y, this.nodeSz, this.nodeSz);
-			row.push(new Node(this.ctx, rectModel, i, j));
-			x += (this.nodeSz + this.borderSize);
+	private fillRow(y, rowNumber): Array<Node> {
+		let x = this.borderSize;
+		const row: Array<Node> = [];
+		const borderedNodeWidth = this.nodeSize + this.borderSize;
+
+		for (let colNumber = 0; colNumber < this.gridSize; colNumber++) {
+			const rectModel = new RectModel(x, y, this.nodeSize, this.nodeSize);
+			row.push(new Node(this.ctx, rectModel, rowNumber, colNumber));
+			x += borderedNodeWidth;
 		}
 		return row;
 	}
@@ -38,7 +40,7 @@ export class Nodes {
 	public drawStartAndEndNodes(): void {
 		// Start node
 		this.ctx.beginPath();
-		this.ctx.arc(2, 2, this.nodeSz, 0, 2 * Math.PI);
+		this.ctx.arc(2, 2, this.nodeSize, 0, 2 * Math.PI);
 		this.ctx.fillStyle = ColoursEnum.white;
 		this.ctx.fill();
 		this.ctx.closePath();
@@ -52,7 +54,7 @@ export class Nodes {
 		this.ctx.arc(
 			this.canvas.width - this.borderSize,
 			this.canvas.height - this.borderSize,
-			this.nodeSz, 0,
+			this.nodeSize, 0,
 			2 * Math.PI
 		);
 		this.ctx.fillStyle = ColoursEnum.white;
@@ -66,8 +68,8 @@ export class Nodes {
 
 
 	public drawAll(): void {
-		for (let i = 0; i < this.gridSz; i++) {
-			for (let j = 0; j < this.gridSz; j++) {
+		for (let i = 0; i < this.gridSize; i++) {
+			for (let j = 0; j < this.gridSize; j++) {
 				this.grid[i][j].draw();
 			}
 		}
@@ -109,7 +111,7 @@ export class Nodes {
 			neighbours.push(this.grid[row - 1][col]);
 		}
 		//right of node
-		if (row < this.gridSz - 1) {
+		if (row < this.gridSize - 1) {
 			neighbours.push(this.grid[row + 1][col]);
 		}
 		//above node
@@ -117,7 +119,7 @@ export class Nodes {
 			neighbours.push(this.grid[row][col - 1]);
 		}
 		//below node
-		if (col < this.gridSz - 1) {
+		if (col < this.gridSize - 1) {
 			neighbours.push(this.grid[row][col + 1]);
 		}
 
