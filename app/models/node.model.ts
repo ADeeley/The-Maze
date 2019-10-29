@@ -8,7 +8,6 @@ export class NodeModel {
 	public w: number;
 
 	constructor(
-		public ctx,
 		private rectModel: RectModel,
 		public row: number,
 		public col: number,
@@ -21,19 +20,10 @@ export class NodeModel {
 		this.w = this.rectModel.width;
 	}
 
-	public draw() {
-		this.ctx.beginPath();
-		this.ctx.rect(this.x, this.y, this.w, this.h);
-		this.ctx.fillStyle = this.colour;
-		this.ctx.fill();
-		this.ctx.closePath();
-	}
-
 	public openUp() {
 		/**
 		 * Opens the node up to be travelled to.
 		 */
-		//this.colour = colours.grey;
 		this.isOpen = true;
 	}
 }

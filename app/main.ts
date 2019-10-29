@@ -1,11 +1,9 @@
 import { Utils } from "./utils/utils";
-import { Grid } from "./models/grid.model";
+import { GridModel } from "./models/grid.model";
 import { DrawingService } from "./services/drawing.service";
 
-const canvas = <HTMLCanvasElement> document.getElementById("mazeCanvas");
-const ctx = canvas.getContext("2d");
-const drawingService = new DrawingService(ctx, canvas);
-const grid = new Grid(ctx, canvas, 23);
+const drawingService = new DrawingService();
+const grid = new GridModel(23);
 
 function generator(row: number, col: number) {
     /**

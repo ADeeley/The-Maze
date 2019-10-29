@@ -1,12 +1,17 @@
 import { ColoursEnum } from "../enums/colours.enum";
-import { Grid } from "../models/grid.model";
+import { GridModel } from "../models/grid.model";
 import { NodeModel } from "../models/node.model";
 
 export class DrawingService {
 	private borderSize = 2;
 	private size = 20;
+	private canvas;
+	private ctx;
 
-	constructor(private ctx, private canvas) { }
+	constructor() {
+		this.canvas = <HTMLCanvasElement>document.getElementById("mazeCanvas");
+		this.ctx = this.canvas.getContext("2d");
+	}
 
 	public drawArc(x: number, y: number, size: number): void {
 		this.ctx.beginPath();
@@ -40,10 +45,18 @@ export class DrawingService {
 		this.ctx.fillText("F", this.canvas.width - 12, this.canvas.height - 3);
 	}
 
-	public drawGrid(grid: Grid): void {
+	public drawGrid(grid: GridModel): void {
 		grid.getGrid.forEach((row: Array<NodeModel>) => {
-			row.forEach((node: NodeModel) => node.draw());
+			row.forEach((node: NodeModel) => this.drawNode(node));
 		});
 		this.drawStartAndEndGoals();
+	}
+
+	public drawNode(node: NodeModel): void {
+		this.ctx.beginPath();
+		this.ctx.rect(node.x, node.y, node.w, node.h);
+		this.ctx.fillStyle = node.colour;
+		this.ctx.fill();
+		this.ctx.closePath();
 	}
 }

@@ -1,13 +1,13 @@
 import { NodeModel } from "./node.model";
 import { RectModel } from "./rect.model";
 
-export class Grid {
+export class GridModel {
 	private gridSize: number;
 	private nodeSize = 20;
 	private grid: Array<Array<NodeModel>> = [];
 	private borderSize = 2;
 
-	constructor(private ctx, private canvas, public n: number) {
+	constructor(public n: number) {
 		this.gridSize = n;
 		this.initNodeGrid();
 	}
@@ -34,7 +34,7 @@ export class Grid {
 
 		for (let colNumber = 0; colNumber < this.gridSize; colNumber++) {
 			const rectModel = new RectModel(x, y, this.nodeSize, this.nodeSize);
-			row.push(new NodeModel(this.ctx, rectModel, rowNumber, colNumber));
+			row.push(new NodeModel(rectModel, rowNumber, colNumber));
 			x += borderedNodeWidth;
 		}
 		return row;
