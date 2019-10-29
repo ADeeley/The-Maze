@@ -5,8 +5,8 @@ import { NodeModel } from "../models/node.model";
 export class DrawingService {
 	private borderSize = 2;
 	private size = 20;
-	private canvas;
-	private ctx;
+	private canvas: HTMLCanvasElement;
+	private ctx: any;
 
 	constructor() {
 		this.canvas = <HTMLCanvasElement>document.getElementById("mazeCanvas");
@@ -54,7 +54,7 @@ export class DrawingService {
 
 	public drawNode(node: NodeModel): void {
 		this.ctx.beginPath();
-		this.ctx.rect(node.x, node.y, node.w, node.h);
+		this.ctx.rect(node.x, node.y, node.width, node.height);
 		this.ctx.fillStyle = node.colour;
 		this.ctx.fill();
 		this.ctx.closePath();

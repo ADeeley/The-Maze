@@ -5,7 +5,7 @@ import { DrawingService } from "./services/drawing.service";
 const drawingService = new DrawingService();
 const grid = new GridModel(23);
 
-function generator(row: number, col: number) {
+function generator(row: number = 0, col: number = 0) {
     /**
      * Generates a maze by randomly joining this node with one of it's
      * neighbours. This function is then recursively called on the
@@ -24,13 +24,9 @@ function generator(row: number, col: number) {
 }
 
 const draw = function () {
-    /**
-     * Main draw loop
-     */
-	generator(0, 0);
+	generator();
 	drawingService.drawGrid(grid);
 
 }
 draw();
-//setInterval(draw, 10);
 

@@ -27,7 +27,7 @@ export class GridModel {
 		}
 	}
 
-	private fillRow(y, rowNumber): Array<NodeModel> {
+	private fillRow(y: number, rowNumber: number): Array<NodeModel> {
 		let x = this.borderSize;
 		const row: Array<NodeModel> = [];
 		const borderedNodeWidth = this.nodeSize + this.borderSize;
@@ -53,16 +53,16 @@ export class GridModel {
 		 * below, left or right.
 		 */
 		if (nodeA.x < nodeB.x) {
-			nodeA.w += this.borderSize;
+			nodeA.width += this.borderSize;
 		}
 		else if (nodeB.x < nodeA.x) {
-			nodeB.w += this.borderSize;
+			nodeB.width += this.borderSize;
 		}
 		else if (nodeA.y < nodeB.y) {
-			nodeA.h += this.borderSize;
+			nodeA.height += this.borderSize;
 		}
 		else if (nodeB.y < nodeA.y) {
-			nodeB.h += this.borderSize;
+			nodeB.height += this.borderSize;
 		}
 		nodeB.openUp();
 	}

@@ -4,8 +4,8 @@ import { RectModel } from "./rect.model";
 export class NodeModel {
 	public x: number;
 	public y: number;
-	public h: number;
-	public w: number;
+	public height: number;
+	public width: number;
 
 	constructor(
 		private rectModel: RectModel,
@@ -16,14 +16,11 @@ export class NodeModel {
 	) {
 		this.x = this.rectModel.x;
 		this.y = this.rectModel.y;
-		this.h = this.rectModel.height;
-		this.w = this.rectModel.width;
+		this.height = this.rectModel.height;
+		this.width = this.rectModel.width;
 	}
 
 	public openUp() {
-		/**
-		 * Opens the node up to be travelled to.
-		 */
 		this.isOpen = true;
 	}
 }
