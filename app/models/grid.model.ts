@@ -1,16 +1,19 @@
-import { Node } from "./node.model";
+import { NodeModel } from "./node.model";
 import { RectModel } from "./rect.model";
-import { ColoursEnum } from "../enums/colours.enum";
 
-export class Nodes {
+export class Grid {
 	private gridSize: number;
 	private nodeSize = 20;
-	private grid: Array<Array<Node>> = [];
+	private grid: Array<Array<NodeModel>> = [];
 	private borderSize = 2;
 
 	constructor(private ctx, private canvas, public n: number) {
 		this.gridSize = n;
 		this.initNodeGrid();
+	}
+
+	get getGrid(): Array<Array<NodeModel>> {
+		return this.grid;
 	}
 
 	private initNodeGrid(): void {
@@ -24,60 +27,24 @@ export class Nodes {
 		}
 	}
 
-	private fillRow(y, rowNumber): Array<Node> {
+	private fillRow(y, rowNumber): Array<NodeModel> {
 		let x = this.borderSize;
-		const row: Array<Node> = [];
+		const row: Array<NodeModel> = [];
 		const borderedNodeWidth = this.nodeSize + this.borderSize;
 
 		for (let colNumber = 0; colNumber < this.gridSize; colNumber++) {
 			const rectModel = new RectModel(x, y, this.nodeSize, this.nodeSize);
-			row.push(new Node(this.ctx, rectModel, rowNumber, colNumber));
+			row.push(new NodeModel(this.ctx, rectModel, rowNumber, colNumber));
 			x += borderedNodeWidth;
 		}
 		return row;
 	}
 
-	private drawArc(x: number, y: number): void {
-		this.ctx.beginPath();
-		this.ctx.arc(
-			x,
-			y,
-			this.nodeSize,
-			0,
-			2 * Math.PI
-		);
-		this.ctx.fillStyle = ColoursEnum.white;
-		this.ctx.fill();
-		this.ctx.closePath();
-	}
-
-	public drawStartAndEndNodes(): void {
-		// Start node
-		this.drawArc(this.borderSize, this.borderSize);
-		this.ctx.font = "12pt serif"
-		this.ctx.fillStyle = ColoursEnum.black;
-		this.ctx.fillText("S", 3, 12);
-
-		// End node
-		this.drawArc(this.canvas.width - this.borderSize, this.canvas.height - this.borderSize);
-		this.ctx.font = "12pt serif"
-		this.ctx.fillStyle = ColoursEnum.black;
-		this.ctx.fillText("F", this.canvas.width - 12, this.canvas.height - 3);
-	}
-
-
-	public drawAll(): void {
-		this.grid.forEach((row: Array<Node>) => {
-			row.forEach((node: Node) => node.draw());
-		});
-		this.drawStartAndEndNodes();
-	}
-
-	public getNode(row: number, col: number): Node {
+	public getNode(row: number, col: number): NodeModel {
 		return this.grid[row][col];
 	}
 
-	public joinNodes(nodeA: Node, nodeB: Node): void {
+	public joinNodes(nodeA: NodeModel, nodeB: NodeModel): void {
 		/**
 		 * Joins the nodes a and b together visually by merging the two boxes
 		 * a and b on the canvas.
@@ -100,8 +67,8 @@ export class Nodes {
 		nodeB.openUp();
 	}
 
-	public getNeighbours(row: number, col: number): Array<Node> {
-		const neighbours: Array<Node> = [];
+	public getNeighbours(row: number, col: number): Array<NodeModel> {
+		const neighbours: Array<NodeModel> = [];
 
 		//left of node
 		if (row > 0) {

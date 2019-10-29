@@ -1,9 +1,11 @@
 import { Utils } from "./utils/utils";
-import { Nodes } from "./models/nodes.model";
+import { Grid } from "./models/grid.model";
+import { DrawingService } from "./services/drawing.service";
 
 const canvas = <HTMLCanvasElement> document.getElementById("mazeCanvas");
 const ctx = canvas.getContext("2d");
-
+const drawingService = new DrawingService(ctx, canvas);
+const grid = new Grid(ctx, canvas, 23);
 
 function generator(row: number, col: number) {
     /**
@@ -11,26 +13,26 @@ function generator(row: number, col: number) {
      * neighbours. This function is then recursively called on the
      * joined node.
      */
-	const thisNode = nodes.getNode(row, col);
-	const neighbours = nodes.getNeighbours(row, col);
+	const thisNode = grid.getNode(row, col);
+	const neighbours = grid.getNeighbours(row, col);
 
 	const shuffledNeighbours = Utils.shuffle(neighbours);
 	for (let i = 0; i < shuffledNeighbours.length; i++) {
 		if (!(shuffledNeighbours[i].isOpen)) {
-			nodes.joinNodes(thisNode, shuffledNeighbours[i]);
+			grid.joinNodes(thisNode, shuffledNeighbours[i]);
 			generator(shuffledNeighbours[i].row, shuffledNeighbours[i].col);
 		}
 	}
 }
-var nodes = new Nodes(ctx, canvas, 23);
 
 const draw = function () {
     /**
      * Main draw loop
      */
 	generator(0, 0);
-	nodes.drawAll();
+	drawingService.drawGrid(grid);
 
 }
-setInterval(draw, 10);
+draw();
+//setInterval(draw, 10);
 

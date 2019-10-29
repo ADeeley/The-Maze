@@ -1,7 +1,7 @@
 import { ColoursEnum } from "../enums/colours.enum";
 import { RectModel } from "./rect.model";
 
-export class Node {
+export class NodeModel {
 	public x: number;
 	public y: number;
 	public h: number;
