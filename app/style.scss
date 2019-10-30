@@ -1,5 +1,23 @@
-#mazeCanvas {
-  background: #ecf0f1;
-  display: block;
-  margin: 0 auto;
+@import url('https://fonts.googleapis.com/css?family=Abril+Fatface&display=swap');
+$text: #ffffff;
+$background: #22352f;
+
+body {
+	background: $background;
+}
+
+main {
+	display: flex;
+	align-items: center;
+	justify-content: space-around;
+	flex-wrap: wrap;
+	margin-top: 50px;
+}
+
+h1 {
+	color: $text;
+	font-family: 'Abril Fatface', cursive;
+	font-weight: lighter;
+	font-size: 60px;
+	margin-left: 50px;
 }

@@ -12,7 +12,7 @@ export class NodeModel {
 		public row: number,
 		public col: number,
 		public isOpen: boolean = false,
-		public colour: ColoursEnum = ColoursEnum.grey
+		public colour: ColoursEnum = ColoursEnum.white
 	) {
 		this.x = this.rectModel.x;
 		this.y = this.rectModel.y;
