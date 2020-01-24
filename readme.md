@@ -7,5 +7,7 @@ To get started just run `parcel index.html`
 
 #Todo:
 - Create a maze solver to operate on the maze created.
-- Change the brain-melting colour palette.
+- Improve the mobile responsiveness and remove hard-coding
+
+![Image of Yaktocat](https://github.com/ADeeley/The-Maze/blob/master/assets/Screenshot%202019-10-30%20at%2008.47.59.png)
 
